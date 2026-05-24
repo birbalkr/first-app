@@ -69,8 +69,37 @@ router.post('/register', async(req, res) => {
     }
 });
 
-router.post('/login', (req, res) => {
-    res.send('Login endpoint');
+router.post('/login', async(req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        if (!email || !password) {
+            return res.status(400).json({ message: 'All fields are required' });
+        }
+        // check if user exists in the database
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(400).json({ message: 'Invalid email or password' });
+        }
+
+        const isPasswordMatch = await user.comparePassword(password);
+        if (!isPasswordMatch) return res.status(400).json({ message: 'Invalid email or password' });
+
+        const token = generateToken(user._id);
+        res.status(200).json({
+            token,
+            user: {
+                id:user._id,
+                email: user.email,
+                username: user.username,
+                profilePicture: user.profilePicture,
+            },
+        });
+    } catch (error) {
+        console.log("Error in login route",error);
+        res.status(500).json({ message: 'Server error' });
+        
+    }
 });
 
 export default router;
