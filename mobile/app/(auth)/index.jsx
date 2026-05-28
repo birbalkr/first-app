@@ -38,9 +38,11 @@ export default function Login() {
                 placeholder="Enter your email"
                 placeholderTextColor={COLORS.placeholderText}
                 value={email}
+                autoCapitalize="none"
+                onChangeText={setEmail}
+
               />
             </View>
-
           </View>
 
           {/* password */}
@@ -55,6 +57,7 @@ export default function Login() {
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry={!showPassword}
+                autoCapitalize="none"
               />
               <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={styles.eyeIcon}>
                 <Ionicons name={showPassword ? "eye-outline" : "eye-off-outline"} size={20} color={COLORS.primary} />
