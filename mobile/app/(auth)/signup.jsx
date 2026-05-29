@@ -1,20 +1,29 @@
-import { ActivityIndicator, KeyboardAvoidingView, Platform, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Alert, KeyboardAvoidingView, Platform, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import styles from '../../assets/styles/signup.styles'
 import COLORS from '../../constants/color'
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 
+import { useAuthStore } from '../../store/authStore';
+
+
 export default function Signup() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [isloading, setIsloading] = useState(false)
+  const [isloading, setIsloading] = useState(false);
+
+  const { isLoading, register } = useAuthStore();
 
   const router = useRouter();
 
-  const handleSignup = () => { }
+  const handleSignup = async() => { 
+    const result = await register(username, email, password);
+    
+    if (!result.success) Alert.alert("Registration Failed", result.message);
+  };
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -51,8 +60,8 @@ export default function Signup() {
                 <TextInput style={styles.input}
                   placeholder="Enter your email"
                   placeholderTextColor={COLORS.textPrimary}
-                  value={username}
-                  onChangeText={setUsername}
+                  value={email}
+                  onChangeText={setEmail}
                   autoCapitalize="none"
 
                 />
@@ -66,7 +75,7 @@ export default function Signup() {
                 <Ionicons name="lock-closed-outline" size={20} color={COLORS.primary} style={styles.inputIcon} />
                 <TextInput
                   style={styles.input}
-                  placeholder=""
+                  placeholder="Enter your password"
                   placeholderTextColor={COLORS.placeholderText}
                   value={password}
                   onChangeText={setPassword}
