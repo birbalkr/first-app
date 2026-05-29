@@ -14,8 +14,9 @@ export default function Login() {
 
   const handleLogin = async() => {
     const result = await login(email, password);
-    if (!result.success) Alert.alert("Login Failed", result.error);
+    if (!result.success) Alert.alert("Login Failed", result.message);
   };
+
   return (
     <KeyboardAvoidingView 
       style={{ flex: 1 }}
